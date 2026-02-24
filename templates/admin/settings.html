@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - QueueBlaze Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #0f0f1a; color: #fff; }
+        
+        .admin-wrapper { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: #16213e; border-right: 1px solid #2a2a4a; padding: 30px 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #2a2a4a; }
+        .sidebar-logo .logo-icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .sidebar-logo h1 { font-size: 1.5rem; }
+        .sidebar-logo .logo-accent { color: #e94560; }
+        
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 8px; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 14px 18px; color: #a0a0a0; text-decoration: none; border-radius: 10px; transition: all 0.3s ease; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%); color: #fff; }
+        
+        .sidebar-logout { margin-top: 30px; padding-top: 20px; border-top: 1px solid #2a2a4a; }
+        .sidebar-logout a { display: flex; align-items: center; gap: 12px; padding: 14px 18px; color: #ff4757; text-decoration: none; border-radius: 10px; }
+        
+        .main-content { flex: 1; margin-left: 260px; padding: 30px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .page-header h2 { font-size: 1.8rem; }
+        
+        .settings-card { background: #16213e; border-radius: 15px; padding: 40px; border: 1px solid #2a2a4a; max-width: 900px; }
+        
+        .settings-section { margin-bottom: 40px; }
+        .settings-section:last-child { margin-bottom: 0; }
+        .settings-section h3 { font-size: 1.2rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #2a2a4a; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        
+        .form-group label { display: block; margin-bottom: 10px; color: #a0a0a0; font-size: 0.95rem; font-weight: 500; }
+        .form-group input, .form-group textarea { width: 100%; padding: 14px 18px; background: #0f0f1a; border: 1px solid #2a2a4a; border-radius: 10px; color: #fff; font-size: 1rem; font-family: inherit; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #e94560; }
+        .form-group textarea { min-height: 100px; resize: vertical; }
+        
+        .form-actions { margin-top: 30px; padding-top: 20px; border-top: 1px solid #2a2a4a; }
+        .btn-submit { padding: 16px 40px; background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%); border: none; border-radius: 10px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3); }
+        
+        .success-message { background: rgba(0, 217, 165, 0.1); border: 1px solid #00d9a5; color: #00d9a5; padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; }
+        
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; }
+            .main-content { margin-left: 70px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">⚡</div>
+                <h1>Queue<span class="logo-accent">Blaze</span></h1>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'admin_dashboard' %}"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+                <li><a href="{% url 'admin_products' %}"><i class="fas fa-leaf"></i> <span>Products</span></a></li>
+                <li><a href="{% url 'admin_orders' %}"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a></li>
+                <li><a href="{% url 'admin_settings' %}" class="active"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+            </ul>
+            <div class="sidebar-logout">
+                <a href="{% url 'admin_logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <h2>Site Settings</h2>
+            </div>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="success-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="settings-card">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="settings-section">
+                        <h3>General Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Site Name</label>
+                                <input type="text" name="site_name" value="{{ settings.site_name }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Phone</label>
+                                <input type="text" name="contact_phone" value="{{ settings.contact_phone }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                <input type="email" name="contact_email" value="{{ settings.contact_email }}">
+                            </div>
+                            <div class="form-group">
+                                <label>WhatsApp Number</label>
+                                <input type="text" name="whatsapp_number" value="{{ settings.whatsapp_number }}">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Operating Hours</label>
+                                <input type="text" name="operating_hours" value="{{ settings.operating_hours }}" placeholder="e.g., Mon - Sun: 9AM - 9PM">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Site Description</label>
+                                <textarea name="site_description">{{ settings.site_description }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Hero Section</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label>Hero Title</label>
+                                <input type="text" name="hero_title" value="{{ settings.hero_title }}">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Hero Subtitle</label>
+                                <textarea name="hero_subtitle">{{ settings.hero_subtitle }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>About Section</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label>About Title</label>
+                                <input type="text" name="about_title" value="{{ settings.about_title }}">
+                            </div>
+                            <div class="form-group full-width">
+                                <label>About Content</label>
+                                <textarea name="about_content">{{ settings.about_content }}</textarea>
+                            </div>
+                            <div class="form-group full-width">
+                                <label>Contact Address</label>
+                                <textarea name="contact_address">{{ settings.contact_address }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>Bank Account Details (EFT Payments)</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Bank Name</label>
+                                <input type="text" name="bank_name" value="{{ settings.bank_name }}" placeholder="e.g., FNB, Standard Bank">
+                            </div>
+                            <div class="form-group">
+                                <label>Account Number</label>
+                                <input type="text" name="account_number" value="{{ settings.account_number }}" placeholder="e.g., 123456789">
+                            </div>
+                            <div class="form-group">
+                                <label>Account Type</label>
+                                <input type="text" name="account_type" value="{{ settings.account_type }}" placeholder="e.g., Cheque, Savings">
+                            </div>
+                            <div class="form-group">
+                                <label>Branch Code</label>
+                                <input type="text" name="branch_code" value="{{ settings.branch_code }}" placeholder="e.g., 250655">
+                            </div>
+                            <div class="form-group">
+                                <label>Account Holder</label>
+                                <input type="text" name="account_holder" value="{{ settings.account_holder }}" placeholder="e.g., QueueBlaze Pty Ltd">
+                            </div>
+                            <div class="form-group">
+                                <label>Payment Reference</label>
+                                <input type="text" name="payment_reference" value="{{ settings.payment_reference }}" placeholder="e.g., Order #123">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

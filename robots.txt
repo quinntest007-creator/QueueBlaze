@@ -1,0 +1,12 @@
+# Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://queueblaze.co.za/sitemap.xml
+
+# Disallow admin/private areas
+Disallow: /css/
+Disallow: /js/
+Disallow: /_redirects
+Disallow: /netlify.toml

@@ -1,0 +1,905 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - {{ settings.site_name|default:"QueueBlaze" }}{% endblock %}
+
+{% block content %}
+<!-- Checkout Section -->
+<section class="checkout-section">
+    <div class="container">
+        <div class="checkout-grid">
+            <!-- Checkout Form -->
+            <div class="checkout-form-container">
+                <h2 class="checkout-title">Complete Your Order</h2>
+                
+                <form id="checkout-form" class="checkout-form">
+                    {% csrf_token %}
+                    <!-- Contact Information -->
+                    <div class="checkout-section-card">
+                        <h3><i class="fas fa-user"></i> Contact Information</h3>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="first_name">First Name *</label>
+                                <input type="text" id="first_name" name="first_name" required placeholder="John">
+                            </div>
+                            <div class="form-group">
+                                <label for="last_name">Last Name *</label>
+                                <input type="text" id="last_name" name="last_name" required placeholder="Doe">
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" name="email" required placeholder="john@example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="+27 81 234 5678">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Age Verification -->
+                    <div class="checkout-section-card age-verification">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="age_verification" name="age_verification" required>
+                            <label for="age_verification">I confirm that I am 18 years or older *</label>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Type -->
+                    <div class="checkout-section-card">
+                        <h3><i class="fas fa-truck"></i> Delivery Type</h3>
+                        <div class="delivery-options">
+                            <label class="delivery-option">
+                                <input type="radio" name="delivery_type" value="delivery" checked onchange="toggleShipping()">
+                                <span class="delivery-card">
+                                    <i class="fas fa-motorcycle"></i>
+                                    <span class="delivery-title">Delivery</span>
+                                    <span class="delivery-desc">We deliver to your location</span>
+                                </span>
+                            </label>
+                            <label class="delivery-option">
+                                <input type="radio" name="delivery_type" value="pickup" onchange="toggleShipping()">
+                                <span class="delivery-card">
+                                    <i class="fas fa-store"></i>
+                                    <span class="delivery-title">Pickup</span>
+                                    <span class="delivery-desc">Collect from our location</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Address (shown for delivery) -->
+                    <div class="checkout-section-card" id="shipping-address-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Shipping Address</h3>
+                        <div class="form-group">
+                            <label for="address">Street Address *</label>
+                            <input type="text" id="address" name="address" placeholder="123 Main Street">
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="suburb">Suburb *</label>
+                                <input type="text" id="suburb" name="suburb" placeholder="Sandton">
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" name="city" placeholder="Johannesburg">
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="province">Province *</label>
+                                <select id="province" name="province">
+                                    <option value="">Select Province</option>
+                                    <option value="gauteng">Gauteng</option>
+                                    <option value="western-cape">Western Cape</option>
+                                    <option value="kwazulu-natal">KwaZulu-Natal</option>
+                                    <option value="mpumalanga">Mpumalanga</option>
+                                    <option value="limpopo">Limpopo</option>
+                                    <option value="north-west">North West</option>
+                                    <option value="free-state">Free State</option>
+                                    <option value="eastern-cape">Eastern Cape</option>
+                                    <option value="northern-cape">Northern Cape</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="postal_code">Postal Code *</label>
+                                <input type="text" id="postal_code" name="postal_code" placeholder="2000">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pickup Location (shown for pickup) -->
+                    <div class="checkout-section-card hidden" id="pickup-section">
+                        <h3><i class="fas fa-store"></i> Pickup Location</h3>
+                        <div class="pickup-info">
+                            <p><strong>QueueBlaze Dispensary</strong></p>
+                            <p>Johannesburg, South Africa</p>
+                            <p><em>Operating Hours: Mon - Sun: 9AM - 9PM</em></p>
+                        </div>
+                    </div>
+
+                    <!-- Shipping Options -->
+                    <div class="checkout-section-card" id="shipping-options-section">
+                        <h3><i class="fas fa-shipping-fast"></i> Shipping Options</h3>
+                        <div class="shipping-options">
+                            <label class="shipping-option">
+                                <input type="radio" name="shipping_option" value="standard" checked>
+                                <span class="shipping-card">
+                                    <span class="shipping-title">Standard Delivery</span>
+                                    <span class="shipping-desc">3-5 Business Days</span>
+                                    <span class="shipping-price">R150</span>
+                                </span>
+                            </label>
+                            <label class="shipping-option">
+                                <input type="radio" name="shipping_option" value="express">
+                                <span class="shipping-card">
+                                    <span class="shipping-title">Express Delivery</span>
+                                    <span class="shipping-desc">1-2 Business Days</span>
+                                    <span class="shipping-price">R250</span>
+                                </span>
+                            </label>
+                            <label class="shipping-option">
+                                <input type="radio" name="shipping_option" value="overnight">
+                                <span class="shipping-card">
+                                    <span class="shipping-title">Overnight Delivery</span>
+                                    <span class="shipping-desc">Next Business Day</span>
+                                    <span class="shipping-price">R350</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Payment Options -->
+                    <div class="checkout-section-card">
+                        <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="eft" checked onchange="togglePaymentInfo()">
+                                <span class="payment-card">
+                                    <i class="fas fa-university"></i>
+                                    <span class="payment-title">EFT/Bank Transfer</span>
+                                    <span class="payment-desc">Pay directly via bank transfer</span>
+                                </span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="cash" onchange="togglePaymentInfo()">
+                                <span class="payment-card">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                    <span class="payment-title">Cash on Delivery</span>
+                                    <span class="payment-desc">Pay when you receive your order</span>
+                                </span>
+                            </label>
+                            <label class="payment-option">
+                                <input type="radio" name="payment_method" value="stripe" onchange="togglePaymentInfo()">
+                                <span class="payment-card">
+                                    <i class="fab fa-stripe-s"></i>
+                                    <span class="payment-title">Credit Card</span>
+                                    <span class="payment-desc">Pay securely with Visa/Mastercard</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- EFT Account Details -->
+                    <div class="checkout-section-card" id="eft-details">
+                        <h3><i class="fas fa-university"></i> Bank Account Details</h3>
+                        <div class="bank-details">
+                            <div class="bank-detail-row">
+                                <span class="bank-label">Bank Name:</span>
+                                <span class="bank-value" id="bank-name">{{ settings.bank_name|default:"Not configured" }}</span>
+                            </div>
+                            <div class="bank-detail-row">
+                                <span class="bank-label">Account Number:</span>
+                                <span class="bank-value" id="account-number">{{ settings.account_number|default:"Not configured" }}</span>
+                            </div>
+                            <div class="bank-detail-row">
+                                <span class="bank-label">Account Type:</span>
+                                <span class="bank-value" id="account-type">{{ settings.account_type|default:"Not configured" }}</span>
+                            </div>
+                            <div class="bank-detail-row">
+                                <span class="bank-label">Branch Code:</span>
+                                <span class="bank-value" id="branch-code">{{ settings.branch_code|default:"Not configured" }}</span>
+                            </div>
+                            <div class="bank-detail-row">
+                                <span class="bank-label">Account Holder:</span>
+                                <span class="bank-value" id="account-holder">{{ settings.account_holder|default:"Not configured" }}</span>
+                            </div>
+                            <div class="bank-detail-row highlight">
+                                <span class="bank-label">Reference:</span>
+                                <span class="bank-value" id="payment-reference">{{ settings.payment_reference|default:"Order #[ORDER_ID]" }}</span>
+                            </div>
+                        </div>
+                        <p class="eft-instructions">Please use your order number as the payment reference. Your order will be processed once payment is confirmed.</p>
+                    </div>
+
+                    <!-- Order Notes -->
+                    <div class="checkout-section-card">
+                        <h3><i class="fas fa-sticky-note"></i> Order Notes (Optional)</h3>
+                        <div class="form-group">
+                            <textarea id="order_notes" name="order_notes" rows="3" placeholder="Any special instructions for your order..."></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary-container">
+                <div class="order-summary-card">
+                    <h3>Order Summary</h3>
+                    
+                    <div class="cart-items-summary" id="cart-items-summary">
+                        <!-- Cart items will be rendered here -->
+                    </div>
+                    
+                    <div class="summary-divider"></div>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="summary-subtotal">R0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span id="summary-shipping">R150</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="summary-total">R0</span>
+                    </div>
+
+                    <button type="submit" form="checkout-form" class="btn-checkout">
+                        <i class="fas fa-lock"></i> Place Order
+                    </button>
+
+                    <div class="secure-checkout">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure checkout - Your information is protected</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.checkout-section {
+    padding: 120px 0 80px;
+    background: var(--bg-dark);
+    min-height: 100vh;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 40px;
+}
+
+.checkout-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    color: var(--text-light);
+}
+
+.checkout-section-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 20px;
+}
+
+.checkout-section-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkout-section-card h3 i {
+    color: var(--accent);
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.checkout-form .form-group {
+    margin-bottom: 15px;
+}
+
+.checkout-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.checkout-form .form-group input,
+.checkout-form .form-group select,
+.checkout-form .form-group textarea {
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    color: var(--text-light);
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+.checkout-form .form-group input:focus,
+.checkout-form .form-group select:focus,
+.checkout-form .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* Age Verification */
+.age-verification .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.age-verification input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent);
+}
+
+.age-verification label {
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Delivery Options */
+.delivery-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.delivery-option input {
+    display: none;
+}
+
+.delivery-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: var(--bg-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delivery-option input:checked + .delivery-card {
+    border-color: var(--accent);
+    background: rgba(233, 69, 96, 0.1);
+}
+
+.delivery-card i {
+    font-size: 2rem;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.delivery-title {
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.delivery-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Shipping Options */
+.shipping-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shipping-option input {
+    display: none;
+}
+
+.shipping-card {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--bg-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.shipping-option input:checked + .shipping-card {
+    border-color: var(--accent);
+    background: rgba(233, 69, 96, 0.1);
+}
+
+.shipping-title {
+    font-weight: 600;
+    color: var(--text-light);
+    flex: 1;
+}
+
+.shipping-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0 15px;
+}
+
+.shipping-price {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+/* Payment Options */
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.payment-option input {
+    display: none;
+}
+
+.payment-card {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--bg-dark);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option input:checked + .payment-card {
+    border-color: var(--accent);
+    background: rgba(233, 69, 96, 0.1);
+}
+
+.payment-card i {
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin-right: 15px;
+}
+
+.payment-title {
+    font-weight: 600;
+    color: var(--text-light);
+    flex: 1;
+}
+
+.payment-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Pickup Info */
+.pickup-info {
+    padding: 15px;
+    background: var(--bg-dark);
+    border-radius: 10px;
+    color: var(--text-muted);
+}
+
+.pickup-info p {
+    margin-bottom: 8px;
+}
+
+/* Order Summary */
+.order-summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 25px;
+    position: sticky;
+    top: 100px;
+}
+
+.order-summary-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    color: var(--text-light);
+}
+
+.cart-items-summary {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.cart-item-summary {
+    display: flex;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.cart-item-summary:last-child {
+    border-bottom: none;
+}
+
+.cart-item-summary img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.cart-item-summary .item-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-dark);
+    border-radius: 8px;
+    font-size: 1.5rem;
+}
+
+.cart-item-summary-info {
+    flex: 1;
+}
+
+.cart-item-summary-name {
+    font-weight: 500;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.cart-item-summary-qty {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.cart-item-summary-price {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.summary-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 20px 0;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    color: var(--text-muted);
+}
+
+.summary-row.total {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-top: 15px;
+}
+
+.btn-checkout {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--accent) 0%, #ff6b6b 100%);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 25px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-checkout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+}
+
+.secure-checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.secure-checkout i {
+    color: #00d9a5;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Bank Account Details */
+.bank-details {
+    background: var(--bg-dark);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.bank-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.bank-detail-row:last-child {
+    border-bottom: none;
+}
+
+.bank-detail-row.highlight {
+    background: rgba(233, 69, 96, 0.1);
+    margin: 10px -20px;
+    padding: 15px 20px;
+    border-radius: 0 0 10px 10px;
+    border-bottom: none;
+}
+
+.bank-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.bank-value {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.bank-detail-row.highlight .bank-value {
+    color: var(--accent);
+}
+
+.eft-instructions {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(0, 217, 165, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #00d9a5;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .order-summary-container {
+        order: -1;
+    }
+    
+    .order-summary-card {
+        position: static;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+    
+    .delivery-options {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+// Get CSRF token for AJAX requests
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Shipping prices
+const shippingPrices = {
+    'standard': 150,
+    'express': 250,
+    'overnight': 350
+};
+
+// Load cart from localStorage
+cart = JSON.parse(localStorage.getItem('queueblaze_cart')) || [];
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    renderCartSummary();
+    updateSummary();
+    
+    // Listen for shipping option changes
+    document.querySelectorAll('input[name="shipping_option"]').forEach(input => {
+        input.addEventListener('change', updateSummary);
+    });
+    
+    // Form submission
+    document.getElementById('checkout-form').addEventListener('submit', submitOrder);
+});
+
+function toggleShipping() {
+    const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
+    const shippingSection = document.getElementById('shipping-options-section');
+    const shippingAddress = document.getElementById('shipping-address-section');
+    const pickupSection = document.getElementById('pickup-section');
+    
+    if (deliveryType === 'delivery') {
+        shippingSection.classList.remove('hidden');
+        shippingAddress.classList.remove('hidden');
+        pickupSection.classList.add('hidden');
+    } else {
+        shippingSection.classList.add('hidden');
+        shippingAddress.classList.add('hidden');
+        pickupSection.classList.remove('hidden');
+    }
+    
+    updateSummary();
+}
+
+function togglePaymentInfo() {
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    const eftDetails = document.getElementById('eft-details');
+    
+    if (paymentMethod === 'eft') {
+        eftDetails.classList.remove('hidden');
+    } else {
+        eftDetails.classList.add('hidden');
+    }
+}
+
+// Initialize payment info visibility
+document.addEventListener('DOMContentLoaded', function() {
+    togglePaymentInfo();
+});
+
+function renderCartSummary() {
+    const container = document.getElementById('cart-items-summary');
+    
+    if (cart.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Your cart is empty</p>';
+        return;
+    }
+    
+    container.innerHTML = cart.map(item => `
+        <div class="cart-item-summary">
+            ${item.image ? 
+                `<img src="${item.image}" alt="${item.name}">` : 
+                `<div class="item-icon">${item.icon}</div>`
+            }
+            <div class="cart-item-summary-info">
+                <div class="cart-item-summary-name">${item.name}</div>
+                <div class="cart-item-summary-qty">Qty: ${item.quantity}</div>
+            </div>
+            <div class="cart-item-summary-price">R${(item.price * item.quantity).toFixed(2)}</div>
+        </div>
+    `).join('');
+}
+
+function updateSummary() {
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
+    let shipping = 0;
+    
+    if (deliveryType === 'delivery') {
+        const shippingOption = document.querySelector('input[name="shipping_option"]:checked').value;
+        shipping = shippingPrices[shippingOption];
+    }
+    
+    const total = subtotal + shipping;
+    
+    document.getElementById('summary-subtotal').textContent = `R${subtotal.toFixed(2)}`;
+    document.getElementById('summary-shipping').textContent = deliveryType === 'pickup' ? 'R0 (Free)' : `R${shipping}`;
+    document.getElementById('summary-total').textContent = `R${total.toFixed(2)}`;
+}
+
+async function submitOrder(e) {
+    e.preventDefault();
+    
+    // Validate age verification
+    const ageVerified = document.getElementById('age_verification').checked;
+    if (!ageVerified) {
+        alert('You must be 18 years or older to place an order.');
+        return;
+    }
+    
+    // Get form data
+    const formData = new FormData(e.target);
+    const deliveryType = document.querySelector('input[name="delivery_type"]:checked').value;
+    
+    // Calculate totals
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    let shipping = 0;
+    if (deliveryType === 'delivery') {
+        const shippingOption = document.querySelector('input[name="shipping_option"]:checked').value;
+        shipping = shippingPrices[shippingOption];
+    }
+    const total = subtotal + shipping;
+    
+    // Prepare order data
+    const orderData = {
+        customer: {
+            first_name: formData.get('first_name'),
+            last_name: formData.get('last_name'),
+            email: formData.get('email'),
+            phone: formData.get('phone')
+        },
+        delivery_type: deliveryType,
+        address: deliveryType === 'delivery' ? {
+            street: formData.get('address'),
+            suburb: formData.get('suburb'),
+            city: formData.get('city'),
+            province: formData.get('province'),
+            postal_code: formData.get('postal_code')
+        } : null,
+        shipping_option: deliveryType === 'delivery' ? formData.get('shipping_option') : null,
+        payment_method: formData.get('payment_method'),
+        notes: formData.get('order_notes'),
+        items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity
+        })),
+        subtotal: subtotal,
+        shipping: shipping,
+        total: total
+    };
+    
+    try {
+        const response = await fetch('/api/save-order/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify(orderData)
+        });
+        
+        if (response.ok) {
+            // Clear cart
+            localStorage.removeItem('queueblaze_cart');
+            
+            // Show success and redirect
+            alert('Order placed successfully! You will receive a confirmation shortly.');
+            window.location.href = '/';
+        } else {
+            alert('Failed to place order. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+    }
+}
+</script>
+{% endblock %}

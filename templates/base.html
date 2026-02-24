@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>{% block title %}QueueBlaze - Premium Cannabis Dispensary | Best Weed in South Africa{% endblock %}</title>
+    <meta name="description" content="QueueBlaze offers premium cannabis products, edibles, and concentrates. Discreet delivery across South Africa. Order online now - quality tested, lab-verified products.">
+    <meta name="keywords" content="cannabis dispensary, weed shop, buy cannabis online, south africa dispensary, marijuana, thc products, cannabis flower, edibles, concentrates">
+    <meta name="author" content="QueueBlaze">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://queueblaze.co.za/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://queueblaze.co.za/">
+    <meta property="og:title" content="QueueBlaze - Premium Cannabis Dispensary">
+    <meta property="og:description" content="Premium cannabis products with discreet delivery across South Africa. Order online now.">
+    <meta property="og:image" content="https://queueblaze.co.za/images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://queueblaze.co.za/">
+    <meta property="twitter:title" content="QueueBlaze - Premium Cannabis Dispensary">
+    <meta property="twitter:description" content="Premium cannabis products with discreet delivery across South Africa.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Static Files -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Age Verification Modal -->
+    <div id="age-modal" class="modal age-modal">
+        <div class="modal-content age-content">
+            <div class="age-logo">🌿</div>
+            <h2>Welcome to QueueBlaze</h2>
+            <p>You must be 18+ years old to enter this website.</p>
+            <p class="age-warning">Please confirm your age to continue.</p>
+            <div class="age-buttons">
+                <button id="age-verify" class="btn btn-primary">I am 18+</button>
+                <button id="age-deny" class="btn btn-secondary">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container header-container">
+            <a href="/" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">Queue<span class="logo-accent">Blaze</span></span>
+            </a>
+            
+            <nav class="nav" id="nav">
+                <ul class="nav-list">
+                    <li><a href="/#home" class="nav-link">Home</a></li>
+                    <li><a href="/#products" class="nav-link">Products</a></li>
+                    <li><a href="/#about" class="nav-link">About</a></li>
+                    <li><a href="/#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="cart-btn" id="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
+                <button class="menu-toggle" id="menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="cart-close" id="cart-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Cart items will be rendered here -->
+            <div class="cart-empty">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-price" id="cart-total">R0</span>
+            </div>
+            <button class="btn btn-primary btn-checkout" id="checkout-btn">
+                <i class="fas fa-lock"></i> Checkout
+            </button>
+        </div>
+    </aside>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <span class="logo-icon">⚡</span>
+                        <span class="logo-text">Queue<span class="logo-accent">Blaze</span></span>
+                    </a>
+                    <p class="footer-desc">
+                        South Africa's premier destination for premium cannabis products. 
+                        Quality tested, discreet delivery.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="#products">Flowers</a></li>
+                        <li><a href="#products">Edibles</a></li>
+                        <li><a href="#products">Concentrates</a></li>
+                        <li><a href="#products">Accessories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Age Verification</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 QueueBlaze. All rights reserved.</p>
+                <p class="age-notice">🔞 You must be 18+ to purchase. Products contain THC.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span class="toast-message">Added to cart!</span>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/main.js' %}?v=3"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

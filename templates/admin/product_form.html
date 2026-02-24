@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if product %}Edit{% else %}Add{% endif %} Product - QueueBlaze Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #0f0f1a; color: #fff; }
+        
+        .admin-wrapper { display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background: #16213e; border-right: 1px solid #2a2a4a; padding: 30px 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar-logo { text-align: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #2a2a4a; }
+        .sidebar-logo .logo-icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .sidebar-logo h1 { font-size: 1.5rem; }
+        .sidebar-logo .logo-accent { color: #e94560; }
+        
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 8px; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 14px 18px; color: #a0a0a0; text-decoration: none; border-radius: 10px; transition: all 0.3s ease; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%); color: #fff; }
+        
+        .sidebar-logout { margin-top: 30px; padding-top: 20px; border-top: 1px solid #2a2a4a; }
+        .sidebar-logout a { display: flex; align-items: center; gap: 12px; padding: 14px 18px; color: #ff4757; text-decoration: none; border-radius: 10px; }
+        
+        .main-content { flex: 1; margin-left: 260px; padding: 30px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .page-header h2 { font-size: 1.8rem; }
+        
+        .btn-back { padding: 12px 24px; background: transparent; border: 1px solid #a0a0a0; border-radius: 10px; color: #a0a0a0; font-size: 0.95rem; text-decoration: none; }
+        .btn-back:hover { border-color: #e94560; color: #e94560; }
+        
+        .form-card { background: #16213e; border-radius: 15px; padding: 40px; border: 1px solid #2a2a4a; max-width: 900px; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        
+        .form-group { margin-bottom: 25px; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        
+        .form-group label { display: block; margin-bottom: 10px; color: #a0a0a0; font-size: 0.95rem; font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 18px; background: #0f0f1a; border: 1px solid #2a2a4a; border-radius: 10px; color: #fff; font-size: 1rem; font-family: inherit; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #e94560; }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        
+        /* Icon Grid */
+        .icon-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; max-height: 200px; overflow-y: auto; padding: 10px; background: #0f0f1a; border-radius: 10px; border: 1px solid #2a2a4a; }
+        .icon-option { 
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; 
+            font-size: 1.5rem; cursor: pointer; border-radius: 8px; border: 2px solid transparent; transition: all 0.2s ease;
+        }
+        .icon-option:hover { background: rgba(233, 69, 96, 0.2); }
+        .icon-option.selected { border-color: #e94560; background: rgba(233, 69, 96, 0.2); }
+        
+        /* Image Upload */
+        .image-upload-container { position: relative; }
+        .image-preview { 
+            width: 100%; height: 200px; border: 2px dashed #2a2a4a; border-radius: 10px; 
+            display: flex; align-items: center; justify-content: center; cursor: pointer; overflow: hidden;
+            background: #0f0f1a; transition: all 0.3s ease;
+        }
+        .image-preview:hover { border-color: #e94560; }
+        .image-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .image-preview-placeholder { text-align: center; color: #a0a0a0; }
+        .image-preview-placeholder i { font-size: 3rem; margin-bottom: 10px; display: block; }
+        .image-preview input[type="file"] { display: none; }
+        
+        .image-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-remove-image { 
+            padding: 10px 20px; background: rgba(255, 71, 87, 0.1); border: 1px solid #ff4757; 
+            border-radius: 8px; color: #ff4757; cursor: pointer; font-size: 0.9rem;
+        }
+        .btn-remove-image:hover { background: #ff4757; color: #fff; }
+        
+        .checkbox-group { display: flex; align-items: center; gap: 12px; }
+        .checkbox-group input { width: 20px; height: 20px; accent-color: #e94560; }
+        
+        .form-actions { display: flex; gap: 15px; margin-top: 30px; }
+        .btn-submit { padding: 16px 40px; background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%); border: none; border-radius: 10px; color: #fff; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3); }
+        .btn-cancel { padding: 16px 40px; background: transparent; border: 1px solid #a0a0a0; border-radius: 10px; color: #a0a0a0; font-size: 1rem; text-decoration: none; }
+        
+        @media (max-width: 768px) {
+            .sidebar { width: 70px; }
+            .main-content { margin-left: 70px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .icon-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">⚡</div>
+                <h1>Queue<span class="logo-accent">Blaze</span></h1>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="{% url 'admin_dashboard' %}"><i class="fas fa-th-large"></i> <span>Dashboard</span></a></li>
+                <li><a href="{% url 'admin_products' %}" class="active"><i class="fas fa-leaf"></i> <span>Products</span></a></li>
+                <li><a href="{% url 'admin_orders' %}"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a></li>
+                <li><a href="{% url 'admin_settings' %}"><i class="fas fa-cog"></i> <span>Settings</span></a></li>
+            </ul>
+            <div class="sidebar-logout">
+                <a href="{% url 'admin_logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+            </div>
+        </aside>
+        
+        <main class="main-content">
+            <div class="page-header">
+                <h2>{% if product %}Edit{% else %}Add{% endif %} Product</h2>
+                <a href="{% url 'admin_products' %}" class="btn-back">← Back to Products</a>
+            </div>
+            
+            <div class="form-card">
+                <form method="POST" enctype="multipart/form-data" id="product-form">
+                    {% csrf_token %}
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Product Name</label>
+                            <input type="text" name="name" value="{{ product.name|default:'' }}" required>
+                        </div>
+                        
+                        <!-- Image Upload -->
+                        <div class="form-group">
+                            <label>Product Image (Optional)</label>
+                            <div class="image-upload-container">
+                                <div class="image-preview" id="image-preview">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" alt="Product Image" id="preview-img">
+                                    {% else %}
+                                        <div class="image-preview-placeholder">
+                                            <i class="fas fa-image"></i>
+                                            <span>Click to upload image</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <input type="file" name="image" id="image-input" accept="image/*">
+                                <input type="hidden" name="remove_image" id="remove-image" value="false">
+                            </div>
+                            {% if product.image %}
+                            <div class="image-actions">
+                                <button type="button" class="btn-remove-image" id="btn-remove-image">Remove Image</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category">
+                                <option value="flower" {% if product.category == 'flower' %}selected{% endif %}>Flowers</option>
+                                <option value="edibles" {% if product.category == 'edibles' %}selected{% endif %}>Edibles</option>
+                                <option value="concentrates" {% if product.category == 'concentrates' %}selected{% endif %}>Concentrates</option>
+                                <option value="accessories" {% if product.category == 'accessories' %}selected{% endif %}>Accessories</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Strain Type</label>
+                            <select name="strain">
+                                <option value="sativa" {% if product.strain == 'sativa' %}selected{% endif %}>Sativa</option>
+                                <option value="indica" {% if product.strain == 'indica' %}selected{% endif %}>Indica</option>
+                                <option value="hybrid" {% if product.strain == 'hybrid' %}selected{% endif %}>Hybrid</option>
+                                <option value="all" {% if product.strain == 'all' %}selected{% endif %}>All</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>THC Level</label>
+                            <input type="text" name="thc" value="{{ product.thc|default:'' }}" placeholder="e.g., 25% THC">
+                        </div>
+                        <div class="form-group">
+                            <label>Price (R)</label>
+                            <input type="number" name="price" value="{{ product.price|default:'' }}" step="0.01" required>
+                        </div>
+                        
+                        <!-- Icon Selection -->
+                        <div class="form-group full-width">
+                            <label>Icon (Used if no image uploaded)</label>
+                            <div class="icon-grid" id="icon-grid">
+                                <div class="icon-option {% if product.icon == '🌿' %}selected{% endif %}" data-icon="🌿">🌿</div>
+                                <div class="icon-option {% if product.icon == '🍁' %}selected{% endif %}" data-icon="🍁">🍁</div>
+                                <div class="icon-option {% if product.icon == '🌸' %}selected{% endif %}" data-icon="🌸">🌸</div>
+                                <div class="icon-option {% if product.icon == '🍀' %}selected{% endif %}" data-icon="🍀">🍀</div>
+                                <div class="icon-option {% if product.icon == '🎋' %}selected{% endif %}" data-icon="🎋">🎋</div>
+                                <div class="icon-option {% if product.icon == '🌺' %}selected{% endif %}" data-icon="🌺">🌺</div>
+                                <div class="icon-option {% if product.icon == '🍄' %}selected{% endif %}" data-icon="🍄">🍄</div>
+                                <div class="icon-option {% if product.icon == '🌵' %}selected{% endif %}" data-icon="🌵">🌵</div>
+                                <div class="icon-option {% if product.icon == '🎄' %}selected{% endif %}" data-icon="🎄">🎄</div>
+                                <div class="icon-option {% if product.icon == '🌲' %}selected{% endif %}" data-icon="🌲">🌲</div>
+                                <div class="icon-option {% if product.icon == '🍃' %}selected{% endif %}" data-icon="🍃">🍃</div>
+                                <div class="icon-option {% if product.icon == '☘️' %}selected{% endif %}" data-icon="☘️">☘️</div>
+                                <div class="icon-option {% if product.icon == '🌱' %}selected{% endif %}" data-icon="🌱">🌱</div>
+                                <div class="icon-option {% if product.icon == '🍪' %}selected{% endif %}" data-icon="🍪">🍪</div>
+                                <div class="icon-option {% if product.icon == '🍬' %}selected{% endif %}" data-icon="🍬">🍬</div>
+                                <div class="icon-option {% if product.icon == '🍫' %}selected{% endif %}" data-icon="🍫">🍫</div>
+                                <div class="icon-option {% if product.icon == '🍩' %}selected{% endif %}" data-icon="🍩">🍩</div>
+                                <div class="icon-option {% if product.icon == '🍦' %}selected{% endif %}" data-icon="🍦">🍦</div>
+                                <div class="icon-option {% if product.icon == '🧁' %}selected{% endif %}" data-icon="🧁">🧁</div>
+                                <div class="icon-option {% if product.icon == '🍮' %}selected{% endif %}" data-icon="🍮">🍮</div>
+                                <div class="icon-option {% if product.icon == '🍭' %}selected{% endif %}" data-icon="🍭">🍭</div>
+                                <div class="icon-option {% if product.icon == '💧' %}selected{% endif %}" data-icon="💧">💧</div>
+                                <div class="icon-option {% if product.icon == '🧪' %}selected{% endif %}" data-icon="🧪">🧪</div>
+                                <div class="icon-option {% if product.icon == '💎' %}selected{% endif %}" data-icon="💎">💎</div>
+                                <div class="icon-option {% if product.icon == '🔮' %}selected{% endif %}" data-icon="🔮">🔮</div>
+                                <div class="icon-option {% if product.icon == '⚗️' %}selected{% endif %}" data-icon="⚗️">⚗️</div>
+                                <div class="icon-option {% if product.icon == '🧴' %}selected{% endif %}" data-icon="🧴">🧴</div>
+                                <div class="icon-option {% if product.icon == '💊' %}selected{% endif %}" data-icon="💊">💊</div>
+                                <div class="icon-option {% if product.icon == '🏺' %}selected{% endif %}" data-icon="🏺">🏺</div>
+                                <div class="icon-option {% if product.icon == '🫙' %}selected{% endif %}" data-icon="🫙">🫙</div>
+                                <div class="icon-option {% if product.icon == '📦' %}selected{% endif %}" data-icon="📦">📦</div>
+                                <div class="icon-option {% if product.icon == '⚙️' %}selected{% endif %}" data-icon="⚙️">⚙️</div>
+                                <div class="icon-option {% if product.icon == '🔧' %}selected{% endif %}" data-icon="🔧">🔧</div>
+                                <div class="icon-option {% if product.icon == '🛠️' %}selected{% endif %}" data-icon="🛠️">🛠️</div>
+                                <div class="icon-option {% if product.icon == '🔥' %}selected{% endif %}" data-icon="🔥">🔥</div>
+                                <div class="icon-option {% if product.icon == '💨' %}selected{% endif %}" data-icon="💨">💨</div>
+                                <div class="icon-option {% if product.icon == '⚡' %}selected{% endif %}" data-icon="⚡">⚡</div>
+                                <div class="icon-option {% if product.icon == '🔋' %}selected{% endif %}" data-icon="🔋">🔋</div>
+                            </div>
+                            <input type="hidden" name="icon" id="selected-icon" value="{{ product.icon|default:'🌿' }}">
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>Description</label>
+                            <textarea name="description" placeholder="Product description...">{{ product.description|default:'' }}</textarea>
+                        </div>
+                        <div class="form-group full-width checkbox-group">
+                            <input type="checkbox" name="is_active" id="is_active" {% if product.is_active or not product %}checked{% endif %}>
+                            <label for="is_active">Active (show on website)</label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">{% if product %}Update{% else %}Add{% endif %} Product</button>
+                        <a href="{% url 'admin_products' %}" class="btn-cancel">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Icon selection
+        const iconOptions = document.querySelectorAll('.icon-option');
+        const selectedIconInput = document.getElementById('selected-icon');
+        
+        iconOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                iconOptions.forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedIconInput.value = this.dataset.icon;
+            });
+        });
+        
+        // Image upload preview
+        const imageInput = document.getElementById('image-input');
+        const imagePreview = document.getElementById('image-preview');
+        const previewImg = document.getElementById('preview-img');
+        
+        imagePreview.addEventListener('click', function() {
+            imageInput.click();
+        });
+        
+        imageInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (previewImg) {
+                        previewImg.src = e.target.result;
+                    } else {
+                        imagePreview.innerHTML = '<img src="' + e.target.result + '" alt="Product Image" id="preview-img">';
+                    }
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+        
+        // Remove image
+        const removeImageBtn = document.getElementById('btn-remove-image');
+        const removeImageInput = document.getElementById('remove-image');
+        
+        if (removeImageBtn) {
+            removeImageBtn.addEventListener('click', function() {
+                removeImageInput.value = 'true';
+                imagePreview.innerHTML = `
+                    <div class="image-preview-placeholder">
+                        <i class="fas fa-image"></i>
+                        <span>Click to upload image</span>
+                    </div>
+                `;
+                this.style.display = 'none';
+                imageInput.value = '';
+            });
+        }
+    </script>
+</body>
+</html>

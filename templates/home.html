@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ settings.site_name }} - Premium Cannabis Dispensary | Best Weed in South Africa{% endblock %}
+
+{% block content %}
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="/static/video/hero_frames/4823275-hd_1920_1080_30fps.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-badge">
+                <span class="badge-icon">🎯</span>
+                <span>#1 Dispensary in South Africa</span>
+            </div>
+            <h1 class="hero-title">
+                {{ settings.hero_title|default:"Premium Quality"|linebreaks }}<br>
+                <span class="gradient-text">Cannabis Products</span>
+            </h1>
+            <p class="hero-subtitle">
+                {{ settings.hero_subtitle|default:"Discover our curated selection of premium strains, edibles, and concentrates. Lab-tested for quality and potency. Discreet delivery nationwide." }}
+            </p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary btn-lg">
+                    <i class="fas fa-leaf"></i> Shop Now
+                </a>
+                <a href="#contact" class="btn btn-outline btn-lg">
+                    <i class="fas fa-phone"></i> Contact Us
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">{{ products.count|default:"500" }}+</span>
+                    <span class="stat-label">Products</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">10k+</span>
+                    <span class="stat-label">Happy Customers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Satisfaction</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <a href="#products">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Discreet Delivery</h3>
+                    <p>Fast, discreet packaging and delivery across South Africa. Your privacy is our priority.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3>Lab Tested</h3>
+                    <p>All products are lab-tested for potency and purity. Quality you can trust.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock customer support. We're here to help anytime.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Premium Quality</h3>
+                    <p>Sourced from the best growers. Hand-picked, premium products guaranteed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Our Products</span>
+                <h2 class="section-title">Premium Selection</h2>
+                <p class="section-subtitle">Browse our extensive collection of quality cannabis products</p>
+            </div>
+            
+            <!-- Product Filters -->
+            <div class="product-filters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-th"></i> All
+                </button>
+                <button class="filter-btn" data-filter="flower">
+                    <i class="fas fa-seedling"></i> Flowers
+                </button>
+                <button class="filter-btn" data-filter="edibles">
+                    <i class="fas fa-cookie"></i> Edibles
+                </button>
+                <button class="filter-btn" data-filter="concentrates">
+                    <i class="fas fa-tint"></i> Concentrates
+                </button>
+                <button class="filter-btn" data-filter="accessories">
+                    <i class="fas fa-tools"></i> Accessories
+                </button>
+            </div>
+            
+            <!-- Strain Filters -->
+            <div class="strain-filters">
+                <button class="strain-btn active" data-strain="all">All Strains</button>
+                <button class="strain-btn" data-strain="sativa">Sativa</button>
+                <button class="strain-btn" data-strain="indica">Indica</button>
+                <button class="strain-btn" data-strain="hybrid">Hybrid</button>
+            </div>
+            
+            <!-- Search -->
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search products...">
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="products-grid" id="products-grid">
+                {% for product in products %}
+                <div class="product-card" data-category="{{ product.category }}" data-strain="{{ product.strain }}" data-id="{{ product.id }}" data-image="{% if product.image %}{{ product.image.url }}{% endif %}">
+                    <div class="product-image">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
+                        {% else %}
+                        <div class="product-placeholder">{{ product.icon }}</div>
+                        {% endif %}
+                        <span class="product-badge strain-{{ product.strain }}">{{ product.get_strain_display }}</span>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <div class="product-meta">
+                            <span class="product-thc">{{ product.thc|default:"--" }}</span>
+                            <span class="product-price">R{{ product.price }}</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-add-cart" onclick="addToCart({{ product.id }})">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                            <button class="btn-info" onclick="toggleProductInfo({{ product.id }})">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                        </div>
+                        <div class="product-description" id="product-desc-{{ product.id }}">
+                            {{ product.description|default:"No description available." }}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                    <i class="fas fa-leaf" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 20px;"></i>
+                    <p style="color: var(--text-muted);">No products available. Check back soon!</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- View More Button (Desktop only) -->
+            <div class="view-more-container" id="view-more-container" style="display: none;">
+                <button class="btn-view-more" id="btn-view-more" onclick="viewMoreProducts()">
+                    <i class="fas fa-plus"></i> View More
+                </button>
+                <button class="btn-view-less hidden" id="btn-view-less" onclick="viewLessProducts()">
+                    <i class="fas fa-minus"></i> View Less
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <div class="about-img-wrapper">
+                        <div class="about-img-placeholder">
+                            <video autoplay muted loop playsinline class="about-card-video">
+                                <source src="/static/video/about_us/7667132-uhd_3840_2160_30fps.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="about-experience">
+                            <span class="exp-number">5+</span>
+                            <span class="exp-text">Years Experience</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <span class="section-tag">About Us</span>
+                    <h2 class="section-title">{{ settings.about_title|default:"Your Trusted Dispensary"|linebreaks }}</h2>
+                    <p class="about-text">
+                        {{ settings.about_content|default:"QueueBlaze is South Africa's premier destination for premium cannabis products. We pride ourselves on offering only the highest quality products, sourced from trusted growers and tested for purity and potency." }}
+                    </p>
+                    <ul class="about-features">
+                        <li><i class="fas fa-check"></i> Premium Quality Products</li>
+                        <li><i class="fas fa-check"></i> Lab Tested & Verified</li>
+                        <li><i class="fas fa-check"></i> Discreet Fast Delivery</li>
+                        <li><i class="fas fa-check"></i> Excellent Customer Service</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary">
+                        <i class="fas fa-phone"></i> Get In Touch
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Contact Us</span>
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Have questions? We'd love to hear from you</p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>{{ settings.contact_address|default:"Johannesburg, South Africa" }}</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p>{{ settings.contact_phone|default:"+27 81 234 5678" }}</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>{{ settings.contact_email|default:"info@queueblaze.co.za" }}</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Hours</h4>
+                            <p>{{ settings.operating_hours|default:"Mon - Sun: 9AM - 9PM" }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="contact-image-placeholder">
+                    <video autoplay muted loop playsinline class="contact-card-video">
+                        <source src="/static/video/get_in_touch/7667166-uhd_3840_2160_30fps.mp4" type="video/mp4">
+                    </video>
+                    <div class="placeholder-content">
+                        <i class="fas fa-cannabis"></i>
+                        <h3>QueueBlaze</h3>
+                        <p>Premium Cannabis Products</p>
+                        <p class="coming-soon">Coming Soon</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

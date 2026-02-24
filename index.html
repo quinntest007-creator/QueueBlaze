@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>QueueBlaze - Premium Cannabis Dispensary | Best Weed in South Africa</title>
+    <meta name="description" content="QueueBlaze offers premium cannabis products, edibles, and concentrates. Discreet delivery across South Africa. Order online now - quality tested, lab-verified products.">
+    <meta name="keywords" content="cannabis dispensary, weed shop, buy cannabis online, south africa dispensary, marijuana, thc products, cannabis flower, edibles, concentrates">
+    <meta name="author" content="QueueBlaze">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://queueblaze.co.za/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://queueblaze.co.za/">
+    <meta property="og:title" content="QueueBlaze - Premium Cannabis Dispensary">
+    <meta property="og:description" content="Premium cannabis products with discreet delivery across South Africa. Order online now.">
+    <meta property="og:image" content="https://queueblaze.co.za/images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://queueblaze.co.za/">
+    <meta property="twitter:title" content="QueueBlaze - Premium Cannabis Dispensary">
+    <meta property="twitter:description" content="Premium cannabis products with discreet delivery across South Africa.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Age Verification Modal -->
+    <div id="age-modal" class="modal age-modal">
+        <div class="modal-content age-content">
+            <div class="age-logo">🌿</div>
+            <h2>Welcome to QueueBlaze</h2>
+            <p>You must be 18+ years old to enter this website.</p>
+            <p class="age-warning">Please confirm your age to continue.</p>
+            <div class="age-buttons">
+                <button id="age-verify" class="btn btn-primary">I am 18+</button>
+                <button id="age-deny" class="btn btn-secondary">Exit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">⚡</span>
+                <span class="logo-text">Queue<span class="logo-accent">Blaze</span></span>
+            </a>
+            
+            <nav class="nav" id="nav">
+                <ul class="nav-list">
+                    <li><a href="#home" class="nav-link active">Home</a></li>
+                    <li><a href="#products" class="nav-link">Products</a></li>
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <div class="header-actions">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="cart-btn" id="cart-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cart-count">0</span>
+                </button>
+                <button class="menu-toggle" id="menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="cart-close" id="cart-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Cart items will be rendered here -->
+            <div class="cart-empty">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="total-price" id="cart-total">R0</span>
+            </div>
+            <button class="btn btn-primary btn-checkout" id="checkout-btn">
+                <i class="fas fa-lock"></i> Checkout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-bg">
+            <div class="hero-overlay"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-badge">
+                <span class="badge-icon">🎯</span>
+                <span>#1 Dispensary in South Africa</span>
+            </div>
+            <h1 class="hero-title">
+                Premium Quality<br>
+                <span class="gradient-text">Cannabis Products</span>
+            </h1>
+            <p class="hero-subtitle">
+                Discover our curated selection of premium strains, edibles, and concentrates. 
+                Lab-tested for quality and potency. Discreet delivery nationwide.
+            </p>
+            <div class="hero-buttons">
+                <a href="#products" class="btn btn-primary btn-lg">
+                    <i class="fas fa-leaf"></i> Shop Now
+                </a>
+                <a href="#contact" class="btn btn-outline btn-lg">
+                    <i class="fas fa-phone"></i> Contact Us
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">500+</span>
+                    <span class="stat-label">Products</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">10k+</span>
+                    <span class="stat-label">Happy Customers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">98%</span>
+                    <span class="stat-label">Satisfaction</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <a href="#products">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3>Discreet Delivery</h3>
+                    <p>Fast, discreet packaging and delivery across South Africa. Your privacy is our priority.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <h3>Lab Tested</h3>
+                    <p>All products are lab-tested for potency and purity. Quality you can trust.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock customer support. We're here to help anytime.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Premium Quality</h3>
+                    <p>Sourced from the best growers. Hand-picked, premium products guaranteed.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="products">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Our Products</span>
+                <h2 class="section-title">Premium Selection</h2>
+                <p class="section-subtitle">Browse our extensive collection of quality cannabis products</p>
+            </div>
+            
+            <!-- Product Filters -->
+            <div class="product-filters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-th"></i> All
+                </button>
+                <button class="filter-btn" data-filter="flower">
+                    <i class="fas fa-seedling"></i> Flowers
+                </button>
+                <button class="filter-btn" data-filter="edibles">
+                    <i class="fas fa-cookie"></i> Edibles
+                </button>
+                <button class="filter-btn" data-filter="concentrates">
+                    <i class="fas fa-tint"></i> Concentrates
+                </button>
+                <button class="filter-btn" data-filter="accessories">
+                    <i class="fas fa-tools"></i> Accessories
+                </button>
+            </div>
+            
+            <!-- Strain Filters -->
+            <div class="strain-filters">
+                <button class="strain-btn active" data-strain="all">All Strains</button>
+                <button class="strain-btn" data-strain="sativa">Sativa</button>
+                <button class="strain-btn" data-strain="indica">Indica</button>
+                <button class="strain-btn" data-strain="hybrid">Hybrid</button>
+            </div>
+            
+            <!-- Search -->
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search products...">
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="products-grid" id="products-grid">
+                <!-- Products will be rendered by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image">
+                    <div class="about-img-wrapper">
+                        <div class="about-img-placeholder">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="about-experience">
+                            <span class="exp-number">5+</span>
+                            <span class="exp-text">Years Experience</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <span class="section-tag">About Us</span>
+                    <h2 class="section-title">Your Trusted<br>Dispensary</h2>
+                    <p class="about-text">
+                        QueueBlaze is South Africa's premier destination for premium cannabis products. 
+                        We pride ourselves on offering only the highest quality products, sourced from 
+                        trusted growers and tested for purity and potency.
+                    </p>
+                    <p class="about-text">
+                        Our team of experts carefully curates every product in our selection, ensuring 
+                        that you get the best value for your money. With discreet delivery across 
+                        South Africa, your privacy is always protected.
+                    </p>
+                    <ul class="about-features">
+                        <li><i class="fas fa-check"></i> Premium Quality Products</li>
+                        <li><i class="fas fa-check"></i> Lab Tested & Verified</li>
+                        <li><i class="fas fa-check"></i> Discreet Fast Delivery</li>
+                        <li><i class="fas fa-check"></i> Excellent Customer Service</li>
+                    </ul>
+                    <a href="#contact" class="btn btn-primary">
+                        <i class="fas fa-phone"></i> Get In Touch
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Contact Us</span>
+                <h2 class="section-title">Get In Touch</h2>
+                <p class="section-subtitle">Have questions? We'd love to hear from you</p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Location</h4>
+                            <p>Johannesburg, South Africa</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p>+27 81 234 5678</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>info@queueblaze.co.za</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>Hours</h4>
+                            <p>Mon - Sun: 9AM - 9PM</p>
+                        </div>
+                    </div>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <form class="contact-form" id="contact-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Enter your name">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject">
+                            <option value="general">General Inquiry</option>
+                            <option value="order">Order Question</option>
+                            <option value="product">Product Question</option>
+                            <option value="partnership">Partnership</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required placeholder="How can we help you?"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <span class="logo-icon">⚡</span>
+                        <span class="logo-text">Queue<span class="logo-accent">Blaze</span></span>
+                    </a>
+                    <p class="footer-desc">
+                        South Africa's premier destination for premium cannabis products. 
+                        Quality tested, discreet delivery.
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#products">Products</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Products</h4>
+                    <ul>
+                        <li><a href="#products">Flowers</a></li>
+                        <li><a href="#products">Edibles</a></li>
+                        <li><a href="#products">Concentrates</a></li>
+                        <li><a href="#products">Accessories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Age Verification</a></li>
+                        <li><a href="#">Shipping Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 QueueBlaze. All rights reserved.</p>
+                <p class="age-notice">🔞 You must be 18+ to purchase. Products contain THC.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span class="toast-message">Added to cart!</span>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/main.js"></script>
+</body>
+</html>
