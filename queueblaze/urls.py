@@ -6,7 +6,6 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from django.views.generic import RedirectView
 from main import views
 from main import admin as main_admin
 
@@ -35,15 +34,6 @@ urlpatterns = [
     path('api/save-inquiry/', main_admin.save_inquiry, name='save_inquiry'),
 ]
 
-# Serve media files in development and production
-# In production, use a cloud storage service like AWS S3 or Cloudinary
+# Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-else:
-    # In production, add media URL to WhiteNoise
-    from django.contrib.staticfiles.views import serve
-    from django.urls import re_path
-    urlpatterns += [
-        re_path(r'^media/(?P<path>.*)
-, serve, {'document_root': settings.MEDIA_ROOT}),
-    ]
