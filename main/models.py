@@ -1,5 +1,6 @@
 from django.db import models
 import os
+import base64
 
 # Create your models here.
 
@@ -68,7 +69,9 @@ class Product(models.Model):
     thc = models.CharField(max_length=50, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     icon = models.CharField(max_length=10, choices=ICON_CHOICES, default='🌿')
-    image = models.ImageField(upload_to='products/', blank=True, null=True)
+    # Store image as base64 in database
+    image = models.TextField(blank=True, null=True)  # Base64 encoded image
+    image_content_type = models.CharField(max_length=50, blank=True, null=True)  # e.g., 'image/jpeg'
     description = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -81,11 +84,15 @@ class Product(models.Model):
         return self.name
     
     def delete(self, *args, **kwargs):
-        # Delete the image file when product is deleted
-        if self.image:
-            if os.path.isfile(self.image.path):
-                os.remove(self.image.path)
+        # Image is stored in database, no file to delete
         super().delete(*args, **kwargs)
+    
+    @property
+    def image_url(self):
+        """Return image as data URL for display"""
+        if self.image:
+            return f"data:{self.image_content_type};base64,{self.image}"
+        return None
 
 
 class SiteSettings(models.Model):

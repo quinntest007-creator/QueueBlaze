@@ -61,6 +61,15 @@ def admin_products(request):
 @login_required
 def admin_product_add(request):
     if request.method == 'POST':
+        # Handle image upload and convert to base64
+        image_data = None
+        content_type = None
+        if request.FILES.get('image'):
+            import base64
+            img_file = request.FILES.get('image')
+            image_data = base64.b64encode(img_file.read()).decode('utf-8')
+            content_type = img_file.content_type
+        
         product = Product(
             name=request.POST.get('name'),
             category=request.POST.get('category'),
@@ -69,12 +78,10 @@ def admin_product_add(request):
             price=request.POST.get('price'),
             icon=request.POST.get('icon'),
             description=request.POST.get('description'),
-            is_active=request.POST.get('is_active') == 'on'
+            is_active=request.POST.get('is_active') == 'on',
+            image=image_data,
+            image_content_type=content_type
         )
-        
-        # Handle image upload
-        if request.FILES.get('image'):
-            product.image = request.FILES.get('image')
         
         product.save()
         messages.success(request, 'Product added successfully!')
@@ -97,29 +104,18 @@ def admin_product_edit(request, product_id):
         product.description = request.POST.get('description')
         product.is_active = request.POST.get('is_active') == 'on'
         
-        # Handle image upload/remove
+        # Handle image upload/remove - store as base64 in database
         remove_image = request.POST.get('remove_image') == 'true'
         
-        if remove_image and old_image:
-            # Delete old image file
-            try:
-                import os
-                if old_image.path and os.path.exists(old_image.path):
-                    os.remove(old_image.path)
-            except:
-                pass
+        if remove_image:
             product.image = None
+            product.image_content_type = None
         elif request.FILES.get('image'):
-            # Delete old image if exists
-            if old_image:
-                try:
-                    import os
-                    if old_image.path and os.path.exists(old_image.path):
-                        os.remove(old_image.path)
-                except:
-                    pass
-            # Save new image
-            product.image = request.FILES.get('image')
+            import base64
+            img_file = request.FILES.get('image')
+            product.image = base64.b64encode(img_file.read()).decode('utf-8')
+            product.image_content_type = img_file.content_type
+        # Keep old image if no new upload and not removing
         
         product.save()
         messages.success(request, 'Product updated successfully!')
@@ -199,7 +195,7 @@ def api_products(request):
         'thc': p.thc,
         'price': str(p.price),
         'icon': p.icon,
-        'image': p.image.url if p.image else None,
+        'image': p.image_url,  # Returns data URL for database-stored images
         'description': p.description
     } for p in products]
     return JsonResponse(data, safe=False)
